@@ -30,7 +30,7 @@ fs.exists(fileName, function(makeSureItExists) {
 
 						console.log("The Server has started on port 5000");
 					}
-					fs.close(fd);
+					fs.close(file);
 				});
 			});
 		});
