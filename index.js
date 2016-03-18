@@ -1,36 +1,34 @@
-var fs require('fs');
+var fs = require('fs');
 var http = require('http');
 
-fs.exists(fileName, function(makeSureItExists) {
-	
-	if(makeSureItExists) {
+fs.exists('index.html', function(exists) {
+
+	if(exists) {
+
 		fs.stat('index.html', function(error, stats) {
 
-			fs.open('index.html', 'r', function(error, file) {
+			fs.open('index.html', 'r', function(error, fd) {
 
-				var buffer = new Buffer(stats.size);
+				var buf = new Buffer(stats.size);
 
-				fs.read(file, buffer, 0, buffer.length, null, function(error, bytesRead, buffer) {
-
-					var data = buffer.toString('utf-8', 0, buffer.length);
+				fs.read(fd, buf, 0, buf.length, null, function(error, bytesRead, buf) {
+					var data = buf.toString('utf-8', 0, buf.length);
 
 					http.createServer(function(req, res) {
-
 						res.writeHead(200);
-
 						res.end(data);
-						/* This is where you listen to the port*/
 					}).listen(process.env.PORT || 5000);
 					
 					if(typeof process.env.PORT !== 'undefined'){
 
-						console.log("The Server has started" + process.env.PORT);
+						console.log("Server started on port" + process.env.PORT);
 
 					} else {
 
-						console.log("The Server has started on port 5000");
+						console.log("Server started on port 5000");
 					}
-					fs.close(file);
+					
+					fs.close(fd);
 				});
 			});
 		});
