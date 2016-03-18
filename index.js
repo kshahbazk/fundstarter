@@ -1,15 +1,17 @@
-var express = require('express')
-var app = express()
+var fs = require("fs");
 
-/* serves all the static files*/
-app.set('port', (process.env.PORT || 8080))
-app.use(express.static(__dirname + '/public'))
+var filename = "./index.html";
 
-/*serves main page*/
-app.get('/', function(request, response) {
-response.sendfile('index.html') 
-})
+function begin(resp) {
+    resp.writeHead(200, {
+        "Content-Type": "text/html"
+    });
+    fs.readFile(filename, "utf8", function(err, data) {
+        if (err) throw err;
+        resp.write(data);
+        resp.end();
+    });
+}
 
-app.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'))
-})
+var buf = fs.readFileSync(filename, "utf8");
+
